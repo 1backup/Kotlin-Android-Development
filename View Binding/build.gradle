@@ -1,0 +1,5 @@
+ ADD THIS BELOW buildtypes
+ 
+   buildFeatures{
+        viewBinding = true
+    }
