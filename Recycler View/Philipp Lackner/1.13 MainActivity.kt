@@ -17,6 +17,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        /*
+        * steps
+        * 1. set the layout
+        * 2. send the value to the adapter
+        * 3. set the adapter
+        * */
+
+       /*
+       * different list  design
+       *  1. for horizontal
+       *         rec.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+       * 2. for vertical
+       *         rec.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+       *
+       *for grid view
+       *
+       * 1. pass context and the number of column you want
+       *               rec.layoutManager = GridLayoutManager(this,2)
+       *
+       *
+       * */
 
         var toDoList = mutableListOf(ToDo("Demo", false)) // demo list. Opens every time you start the app
 
