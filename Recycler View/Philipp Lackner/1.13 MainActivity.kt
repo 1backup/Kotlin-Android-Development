@@ -1,32 +1,47 @@
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlinrecyclerview.databinding.ItemTodoBinding
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kotlinrecyclerview.databinding.ActivityMainBinding
+import android.app.Activity
+import android.content.Context
+import android.os.Build
+import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 
-class ToDoAdapter(var todos: List<ToDo>): RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>()
-{
-    /*
-    * steps
-    * 1. create a inner class(used viewBinding). which holds the view of items_todo.xml
-    * 2. onCreateViewHolder > inflate the layout
-    * 3. onBindViewHolder> access all the items of the custom list row
-    * 4.  getItemCount()>  returns the list size
-    * */
-    inner class ToDoViewHolder(val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ItemTodoBinding.inflate(layoutInflater, parent, false)
-        return ToDoViewHolder(binding)
-    }
+class MainActivity : AppCompatActivity() {
+    private  lateinit var  binding: ActivityMainBinding
 
-    override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
-        holder.binding.apply {
-            tvTitle.text = todos[position].title
-            tvDone.isChecked = todos[position].isChecked
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        var toDoList = mutableListOf(ToDo("Demo", false)) // demo list. Opens every time you start the app
+
+        val adapter = ToDoAdapter(toDoList) // setting the list to the adapter
+        binding.rv.adapter = adapter // setting the adapter
+        binding.rv.layoutManager= LinearLayoutManager(this) //setting the lay out manager.
+
+        binding.add.setOnClickListener {
+            val title = binding.etTodo.text.toString()
+            val todo = ToDo(title, false)
+            toDoList.add(todo)
+            adapter.notifyItemInserted(toDoList.size-1) // notifying data set changed
+            dismissKeyboard(this)
+            //adapter.notifyDataSetChanged()  > not recommended becasue it will go through all the items
         }
     }
-    override fun getItemCount(): Int {
-        return todos.size
+
+    // keeps the keyboard down when you press
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun dismissKeyboard(activity: Activity) {
+        val imm: InputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (null != activity.currentFocus) imm.hideSoftInputFromWindow(
+            activity.currentFocus!!
+                .applicationWindowToken, 0
+        )
     }
+
 }
